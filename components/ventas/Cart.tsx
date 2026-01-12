@@ -16,7 +16,7 @@ export const Cart: React.FC<CartProps> = ({
 }) => {
 
     const subtotal = items.reduce((sum, item) => sum + item.total, 0);
-    const impuesto = subtotal * 0.12; 
+    const impuesto = subtotal * 0.15;
     const total = subtotal + impuesto;
 
     if (items.length === 0) {
@@ -100,7 +100,7 @@ export const Cart: React.FC<CartProps> = ({
                     <span>${subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm text-gray-600">
-                    <span>IVA (12%)</span>
+                    <span>IVA (15%)</span>
                     <span>${impuesto.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-xl font-bold text-gray-900 pt-2 border-t border-gray-200">

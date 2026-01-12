@@ -245,7 +245,7 @@ function HistorialVentasPage() {
                                         <td className="px-4 py-4 text-right text-gray-800 font-semibold pt-6">${selectedVenta.subtotal?.toFixed(2) || '0.00'}</td>
                                     </tr>
                                     <tr>
-                                        <td colSpan={3} className="px-4 py-1 text-right text-gray-500 font-medium">IVA (12%)</td>
+                                        <td colSpan={3} className="px-4 py-1 text-right text-gray-500 font-medium">IVA (15%)</td>
                                         <td className="px-4 py-1 text-right text-gray-800 font-semibold">${selectedVenta.impuesto?.toFixed(2) || '0.00'}</td>
                                     </tr>
                                     <tr>

@@ -120,7 +120,7 @@ export default function SalesPage() {
 
         setProcessingPayment(true);
         const subtotal = cart.reduce((sum, item) => sum + item.total, 0);
-        const impuesto = subtotal * 0.12;
+        const impuesto = subtotal * 0.15;
         const total = subtotal + impuesto;
 
         const venta: Venta = {
