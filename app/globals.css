@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Importar Bootstrap */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+/* Variables globales TIA */
+:root {
+  --tia-red: #a00404;
+  --tia-red-dark: #7a0303;
+  --tia-red-light: #fee2e2;
+  --secondary: #2e3c43;
+  --sidebar-width: 250px;
+}
+
+/* Reset y estilos base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f9fafb;
+}
+
+/* Layout principal con sidebar */
+.main-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+}
+
+/* Utilidades comunes */
+.card-shadow {
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+.btn-tia {
+  background-color: var(--tia-red);
+  border-color: var(--tia-red);
+  color: white;
+}
+
+.btn-tia:hover {
+  background-color: var(--tia-red-dark);
+  border-color: var(--tia-red-dark);
+  color: white;
+}
+
+/* Loading spinner */
+.spinner-tia {
+  border: 3px solid #f3f4f6;
+  border-top: 3px solid var(--tia-red);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
