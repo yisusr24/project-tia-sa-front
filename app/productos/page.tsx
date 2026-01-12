@@ -11,14 +11,14 @@ import { FaPlus, FaSearch, FaEdit, FaTrash } from 'react-icons/fa';
 
 function ProductosPage() {
     const [productos, setProductos] = useState<Producto[]>([]);
-    const [loading, setLoading] = useState(true); 
+    const [loading, setLoading] = useState(true);
     const [isSearching, setIsSearching] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [filterStatus, setFilterStatus] = useState<'active' | 'deleted'>('active');
 
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [actionType, setActionType] = useState<'delete' | 'restore'>('delete');
-    const [selectedId, setSelectedId] = useState<number | null>(null); 
+    const [selectedId, setSelectedId] = useState<number | null>(null);
 
     const [page, setPage] = useState(0);
     const [size] = useState(10);
@@ -28,18 +28,22 @@ function ProductosPage() {
     const { showToast, ToastComponent } = useToast();
 
     useEffect(() => {
-        setPage(0); 
-        cargarProductos(0);
-    }, [filterStatus]); 
+        setPage(0);
+        setSearchQuery('');
+        setProductos([]);
+        cargarProductos(0, '');
+    }, [filterStatus]);
 
-    const cargarProductos = async (pageParam = page) => {
+    const cargarProductos = async (pageParam = page, queryOverride?: string) => {
         try {
             if (productos.length === 0) setLoading(true);
 
-            if (searchQuery.trim()) {
-                const data = await productoService.buscar(searchQuery);
+            const currentQuery = queryOverride !== undefined ? queryOverride : searchQuery;
+
+            if (currentQuery.trim()) {
+                const data = await productoService.buscar(currentQuery);
                 setProductos(data);
-                setTotalPages(1); 
+                setTotalPages(1);
                 setTotalElements(data.length);
                 return;
             }
@@ -77,11 +81,11 @@ function ProductosPage() {
         }
 
         try {
-            setIsSearching(true); 
+            setIsSearching(true);
             const data = await productoService.buscar(searchQuery);
             setProductos(data);
             setTotalElements(data.length);
-            setTotalPages(1); 
+            setTotalPages(1);
         } catch (error: any) {
             showToast('error', 'Error', 'Error en la búsqueda');
         } finally {

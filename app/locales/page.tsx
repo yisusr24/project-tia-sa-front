@@ -11,7 +11,7 @@ import { FaPlus, FaSearch, FaEdit, FaTrash, FaStore, FaMapMarkerAlt } from 'reac
 
 function LocalesPage() {
     const [locales, setLocales] = useState<Local[]>([]);
-    const [filteredLocales, setFilteredLocales] = useState<Local[]>([]); 
+    const [filteredLocales, setFilteredLocales] = useState<Local[]>([]);
     const [loading, setLoading] = useState(true);
     const [isSearching, setIsSearching] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -29,6 +29,8 @@ function LocalesPage() {
 
     useEffect(() => {
         setPage(0);
+        setSearchQuery('');
+        setFilteredLocales([]);
         cargarLocales();
     }, [filterStatus]);
 
@@ -99,7 +101,7 @@ function LocalesPage() {
                 await localService.restore(selectedId);
                 showToast('success', 'Éxito', 'Local restaurado correctamente');
             }
-            cargarLocales(); 
+            cargarLocales();
         } catch (error: any) {
             console.error(`Error al ${actionType === 'delete' ? 'eliminar' : 'restaurar'}:`, error);
             showToast('error', 'Error', error.response?.data?.message || `Error al ejecutar acción`);
