@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { productoService } from '@/services/productoService';
+import { proveedorService, ProveedorDTO } from '@/services/proveedorService';
 import { ProductoDTO } from '@/types/producto';
 import { useToast } from '@/components/common/ToastNotification';
 import { FaSave, FaTimes, FaBox, FaTag, FaAlignLeft, FaList, FaRuler, FaDollarSign, FaSortAmountDown, FaSortAmountUp, FaTruck } from 'react-icons/fa';
@@ -10,6 +11,7 @@ import { FaSave, FaTimes, FaBox, FaTag, FaAlignLeft, FaList, FaRuler, FaDollarSi
 export default function NuevoProductoPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const [proveedores, setProveedores] = useState<ProveedorDTO[]>([]);
     const { showToast, ToastComponent } = useToast();
 
     const [formData, setFormData] = useState<ProductoDTO>({
@@ -23,6 +25,20 @@ export default function NuevoProductoPage() {
     });
 
     const isSubmittingRef = useRef(false);
+
+    useEffect(() => {
+        loadProveedores();
+    }, []);
+
+    const loadProveedores = async () => {
+        try {
+            const data = await proveedorService.getAll();
+            setProveedores(data);
+        } catch (error) {
+            console.error('Error al cargar proveedores', error);
+            showToast('error', 'Error', 'No se pudieron cargar los proveedores');
+        }
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
@@ -211,8 +227,11 @@ export default function NuevoProductoPage() {
                                                     onChange={handleChange}
                                                 >
                                                     <option value="">Sin proveedor</option>
-                                                    <option value="1">Proveedor 1</option>
-                                                    <option value="2">Proveedor 2</option>
+                                                    {proveedores.map(prov => (
+                                                        <option key={prov.id} value={prov.id}>
+                                                            {prov.razonSocial}
+                                                        </option>
+                                                    ))}
                                                 </select>
                                             </div>
                                         </div>
