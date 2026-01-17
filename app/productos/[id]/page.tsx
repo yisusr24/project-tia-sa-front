@@ -57,7 +57,7 @@ export default function EditarProductoPage({ params }: { params: { id: string } 
             nombre: producto.nombre,
             descripcion: producto.descripcion,
             categoriaId: producto.categoriaId,
-            proveedorId: producto.proveedorId,
+            proveedorId: producto.proveedorId || undefined,
             unidadMedidaId: producto.unidadMedidaId,
             precioCompra: producto.precioCompra,
             precioVenta: producto.precioVenta,

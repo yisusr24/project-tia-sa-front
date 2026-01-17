@@ -19,6 +19,12 @@ export const productoService = {
         return response.data.data || [];
     },
 
+    buscarPaginado: async (query: string, page: number, size: number): Promise<PageResponse<Producto>> => {
+        const payload: BusquedaProductoDTO = { query };
+        const response = await api.post<ApiResponse<PageResponse<Producto>>>(`/productos/buscar?page=${page}&size=${size}`, payload);
+        return response.data.data!;
+    },
+
     create: async (data: ProductoDTO): Promise<Producto> => {
         const response = await api.post<ApiResponse<Producto>>('/productos', data);
         return response.data.data!;

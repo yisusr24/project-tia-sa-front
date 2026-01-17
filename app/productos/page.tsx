@@ -41,13 +41,16 @@ function ProductosPage() {
             const currentQuery = queryOverride !== undefined ? queryOverride : searchQuery;
 
             if (currentQuery.trim()) {
-                const data = await productoService.buscar(currentQuery);
-                setProductos(data);
-                setTotalPages(1);
-                setTotalElements(data.length);
+                setIsSearching(true);
+                const response = await productoService.buscarPaginado(currentQuery, pageParam, size);
+                setProductos(response.data);
+                setTotalPages(response.totalPages);
+                setTotalElements(response.totalElements);
+                setIsSearching(false);
                 return;
             }
 
+            setIsSearching(false);
             if (filterStatus === 'active') {
                 const response = await productoService.getAllPaginated(pageParam, size);
                 setProductos(response.data);
@@ -61,6 +64,7 @@ function ProductosPage() {
             }
         } catch (error: any) {
             showToast('error', 'Error', error.response?.data?.message || 'Error al cargar productos');
+            setIsSearching(false);
         } finally {
             setLoading(false);
         }
@@ -74,23 +78,8 @@ function ProductosPage() {
     };
 
     const buscarProductos = async () => {
-        if (!searchQuery.trim()) {
-            setPage(0);
-            cargarProductos(0);
-            return;
-        }
-
-        try {
-            setIsSearching(true);
-            const data = await productoService.buscar(searchQuery);
-            setProductos(data);
-            setTotalElements(data.length);
-            setTotalPages(1);
-        } catch (error: any) {
-            showToast('error', 'Error', 'Error en la búsqueda');
-        } finally {
-            setIsSearching(false);
-        }
+        setPage(0);
+        await cargarProductos(0, searchQuery);
     };
 
     const openConfirmModal = (id: number, action: 'delete' | 'restore') => {
@@ -237,6 +226,7 @@ function ProductosPage() {
                                         <th>Código</th>
                                         <th>Nombre</th>
                                         <th>Categoría</th>
+                                        <th>Proveedor</th>
                                         <th>Precio Venta</th>
                                         <th>Stock Mín</th>
                                         <th>Acciones</th>
@@ -245,7 +235,7 @@ function ProductosPage() {
                                 <tbody>
                                     {productos.length === 0 ? (
                                         <tr>
-                                            <td colSpan={6} className="text-center text-gray-500 py-4">
+                                            <td colSpan={7} className="text-center text-gray-500 py-4">
                                                 {filterStatus === 'active'
                                                     ? 'No hay productos activos'
                                                     : 'No hay productos inactivos'}
@@ -256,7 +246,8 @@ function ProductosPage() {
                                             <tr key={producto.id}>
                                                 <td className="font-mono">{producto.codigo}</td>
                                                 <td className="font-semibold">{producto.nombre}</td>
-                                                <td>{producto.categoriaId}</td>
+                                                <td>{producto.categoriaNombre || producto.categoriaId || <span className="text-muted small">N/A</span>}</td>
+                                                <td>{producto.proveedorNombre || producto.proveedorId || <span className="text-muted small">N/A</span>}</td>
                                                 <td>${producto.precioVenta?.toFixed(2)}</td>
                                                 <td>{producto.stockMinimo || '-'}</td>
                                                 <td>

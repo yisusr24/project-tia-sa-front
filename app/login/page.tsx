@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { authService } from '@/services/authService';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/components/common/ToastNotification';
-import { FaBoxOpen, FaLock, FaUser } from 'react-icons/fa';
+import { FaBoxOpen, FaLock, FaUser, FaEye, FaEyeSlash } from 'react-icons/fa';
 
 export default function LoginPage() {
     const router = useRouter();
@@ -17,6 +17,7 @@ export default function LoginPage() {
         password: ''
     });
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const isSubmittingRef = useRef(false);
 
@@ -91,13 +92,25 @@ export default function LoginPage() {
                                                         <FaLock className="text-secondary" />
                                                     </span>
                                                     <input
-                                                        type="password"
-                                                        className="form-control border-start-0 ps-0 bg-light"
+                                                        type={showPassword ? "text" : "password"}
+                                                        className="form-control border-0 ps-0 bg-light"
                                                         placeholder="••••••••"
                                                         value={credentials.password}
                                                         onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
                                                         required
                                                     />
+                                                    <button
+                                                        type="button"
+                                                        className="btn bg-light border-0"
+                                                        onClick={() => setShowPassword(!showPassword)}
+                                                        style={{ cursor: 'pointer' }}
+                                                    >
+                                                        {showPassword ? (
+                                                            <FaEyeSlash className="text-secondary" />
+                                                        ) : (
+                                                            <FaEye className="text-secondary" />
+                                                        )}
+                                                    </button>
                                                 </div>
                                             </div>
 

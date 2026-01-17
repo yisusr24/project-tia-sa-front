@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { hasModulePermission } from '@/types/auth';
-import { FaChartPie, FaBox, FaClipboardList, FaCashRegister, FaStore, FaTags, FaTruck } from 'react-icons/fa';
+import { FaChartPie, FaBox, FaClipboardList, FaCashRegister, FaStore, FaTags, FaTruck, FaBoxOpen, FaUpload, FaFileAlt } from 'react-icons/fa';
 
 export default function Sidebar() {
     const pathname = usePathname();
@@ -47,12 +47,22 @@ export default function Sidebar() {
 
                     {/* Productos */}
                     {hasModulePermission(userRole, 'productos') && (
-                        <Link
-                            href="/productos"
-                            className={`nav-link d-flex align-items-center ${isActive('/productos') ? 'active bg-red-50 text-red-600' : 'text-gray-700'}`}
-                        >
-                            <FaBox className="me-2" /> Productos
-                        </Link>
+                        <>
+                            <Link
+                                href="/productos"
+                                className={`nav-link d-flex align-items-center ${isActive('/productos') ? 'active bg-red-50 text-red-600' : 'text-gray-700'}`}
+                            >
+                                <FaBoxOpen className="me-2" /> Productos
+                            </Link>
+                            {usuario?.rol === 'SUPERADMIN' && (
+                                <Link
+                                    href="/productos/importar"
+                                    className={`nav-link d-flex align-items-center ${isActive('/productos/importar') ? 'active bg-red-50 text-red-600' : 'text-gray-700'}`}
+                                >
+                                    <FaUpload className="me-2" /> Productos Masivo
+                                </Link>
+                            )}
+                        </>
                     )}
 
                     {/* Inventario */}
@@ -81,6 +91,16 @@ export default function Sidebar() {
                                 <FaClipboardList className="me-2" /> Historial Ventas
                             </Link>
                         </>
+                    )}
+
+                    {/* Reportes */}
+                    {usuario?.rol === 'SUPERADMIN' && (
+                        <Link
+                            href="/reportes"
+                            className={`nav-link d-flex align-items-center ${isActive('/reportes') ? 'active bg-red-50 text-red-600' : 'text-gray-700'}`}
+                        >
+                            <FaFileAlt className="me-2" /> Reportes
+                        </Link>
                     )}
 
                     {/* Administración */}

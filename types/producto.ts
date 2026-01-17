@@ -20,6 +20,8 @@ export interface Producto {
     updatedAt?: string;
     createdBy?: string;
     updatedBy?: string;
+    categoriaNombre?: string;
+    proveedorNombre?: string;
 }
 
 export interface ProductoDTO {

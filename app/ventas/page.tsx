@@ -11,12 +11,14 @@ import { PaymentModal } from '@/components/ventas/PaymentModal';
 import { InventarioDTO } from '@/types/inventario';
 import { DetalleVenta, Venta } from '@/types/venta';
 import { Local } from '@/types/local';
-import { Store, ShoppingBag } from 'lucide-react';
+import { Store } from 'lucide-react';
 
 export default function SalesPage() {
     const [locales, setLocales] = useState<Local[]>([]);
     const [selectedLocal, setSelectedLocal] = useState<number | null>(null);
     const [products, setProducts] = useState<InventarioDTO[]>([]);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
     const [cart, setCart] = useState<DetalleVenta[]>([]);
 
     const [loadingProducts, setLoadingProducts] = useState(false);
@@ -31,8 +33,10 @@ export default function SalesPage() {
 
     useEffect(() => {
         if (selectedLocal) {
-            loadProducts(selectedLocal);
-            setCart([]); 
+            setProducts([]);
+            setCart([]);
+            setCurrentPage(0);
+            setTotalPages(0);
         }
     }, [selectedLocal]);
 
@@ -46,17 +50,21 @@ export default function SalesPage() {
         }
     };
 
-    const loadProducts = async (localId: number) => {
+    const searchProducts = async (query: string, page: number = 0) => {
+        if (!selectedLocal) return;
         setLoadingProducts(true);
         try {
-            const data = await inventarioService.getByLocal(localId);
-            setProducts(data);
+            const response = await inventarioService.buscarPorLocal(selectedLocal, query, page);
+            setProducts(response.data);
+            setCurrentPage(response.currentPage);
+            setTotalPages(response.totalPages);
         } catch (error) {
-            showToast('error', 'Error', 'Error al cargar inventario');
+            showToast('error', 'Error', 'Error al buscar productos');
         } finally {
             setLoadingProducts(false);
         }
     };
+
 
 
     const addToCart = (product: InventarioDTO) => {
@@ -142,7 +150,7 @@ export default function SalesPage() {
             showToast('success', 'Venta Exitosa', `Ticket #${response.numeroVenta}`);
             setCart([]);
             setPaymentModalOpen(false);
-            loadProducts(selectedLocal); 
+            setProducts([]);
         } catch (error: any) {
             showToast('error', 'Error al Procesar', error.response?.data?.message || 'Hubo un problema con la venta');
         } finally {
@@ -150,7 +158,7 @@ export default function SalesPage() {
         }
     };
 
-    const cartTotal = cart.reduce((sum, item) => sum + item.total, 0) * 1.12; 
+    const cartTotal = cart.reduce((sum, item) => sum + item.total, 0) * 1.12;
 
     return (
         <div className="flex h-screen bg-gray-100 overflow-hidden">
@@ -178,7 +186,11 @@ export default function SalesPage() {
                     <ProductList
                         products={products}
                         onAddToCart={addToCart}
+                        onSearch={searchProducts}
                         loading={loadingProducts}
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={(page) => setCurrentPage(page)}
                     />
                 </main>
             </div>

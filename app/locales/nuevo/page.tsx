@@ -17,15 +17,15 @@ export default function NuevoLocalPage() {
         nombre: '',
         direccion: '',
         ciudad: '',
-        canton: '', // Optional default
-        pais: 'Ecuador', // Default handy
+        canton: '',
+        pais: 'Ecuador',
         telefono: '',
         correo: '',
         tipo: 'TIENDA',
         activo: true
     });
 
-    // Lock ref to prevent double submission
+
     const isSubmittingRef = useRef(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -39,7 +39,6 @@ export default function NuevoLocalPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Guard clause
         if (isSubmittingRef.current || loading) {
             return;
         }
