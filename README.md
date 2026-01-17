@@ -4,7 +4,7 @@ Frontend construido con **Next.js 14**, **TypeScript**, **Bootstrap 5** y **Tail
 
 ---
 
-## Instalación y Configuración
+## Instalación y Configuracion
 
 ### 1. Prerrequisitos
 
