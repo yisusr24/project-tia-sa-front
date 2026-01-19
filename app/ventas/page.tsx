@@ -12,6 +12,7 @@ import { InventarioDTO } from '@/types/inventario';
 import { DetalleVenta, Venta } from '@/types/venta';
 import { Local } from '@/types/local';
 import { Store } from 'lucide-react';
+import { VALOR_IVA } from '@/config/constants';
 
 export default function SalesPage() {
     const [locales, setLocales] = useState<Local[]>([]);
@@ -128,7 +129,7 @@ export default function SalesPage() {
 
         setProcessingPayment(true);
         const subtotal = cart.reduce((sum, item) => sum + item.total, 0);
-        const impuesto = subtotal * 0.15;
+        const impuesto = subtotal * VALOR_IVA;
         const total = subtotal + impuesto;
 
         const venta: Venta = {
@@ -158,7 +159,7 @@ export default function SalesPage() {
         }
     };
 
-    const cartTotal = cart.reduce((sum, item) => sum + item.total, 0) * 1.12;
+    const cartTotal = cart.reduce((sum, item) => sum + item.total, 0) * (1 + VALOR_IVA);
 
     return (
         <div className="flex h-screen bg-gray-100 overflow-hidden">
